@@ -26,6 +26,10 @@ Form creation page
 
 Individual form page, displaying responses
 
+### /user/:id
+
+User page
+
 ## API Routes:
 
 Prefixed with /api/
