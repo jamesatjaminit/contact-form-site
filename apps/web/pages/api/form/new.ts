@@ -41,9 +41,13 @@ export default async function handler(
       viewers: [],
     },
     submissionsPaused: false,
+    notifications: {
+      email: [],
+      discord: [],
+    },
   });
   if (result.insertedId) {
-    res.status(200).json({ id: result.insertedId });
+    res.status(200).json({ _id: result.insertedId });
   } else {
     res.status(500).json({ error: "Internal server error" });
   }

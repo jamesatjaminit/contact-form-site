@@ -9,6 +9,10 @@ export interface Form {
     viewers: string[];
   };
   submissionsPaused: boolean;
+  notifications: {
+    email: string[];
+    discord: string[];
+  };
 }
 
 export interface Response {
@@ -18,7 +22,11 @@ export interface Response {
 }
 
 export interface User {
+  name: string;
   email: string;
+  image: string;
   emailVerified: Date;
   admin: boolean;
 }
+
+export type WithStringId<T> = T & { _id: string };

@@ -1,5 +1,4 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ObjectId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { Form } from "types/dist/database";
@@ -19,28 +18,22 @@ export default async function handler(
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
-  const client = await clientPromise;
-  const db = client.db();
-  const formCollection = db.collection<Form>("responses");
-  const form = await formCollection.findOne({
-    $and: [
-      { _id: new ObjectId(String(req.query.id)) },
-      {
-        $or: [
-          { "permissions.owners": session.user.id },
-          { "permissions.editors": session.user.id },
-        ],
-      },
-    ],
-  });
-  if (!form) {
-    res.status(404).json({ error: "Not found" });
+  if (req.query.userId != session.user.id && !session.admin) {
+    res.status(403).json({ error: "Forbidden" });
     return;
   }
-  const responsesCollection = db.collection<Response>("responses");
-  const responses = await responsesCollection
-    .find({ form: form._id })
+  const client = await clientPromise;
+  const db = client.db();
+  const collection = db.collection<Form>("forms");
+  const forms = await collection
+    .find({
+      $or: [
+        { "permissions.owners": req.query.userId },
+        { "permissions.editors": req.query.userId },
+        { "permissions.viewers": req.query.userId },
+      ],
+    })
     .sort({ createdAt: 1 })
     .toArray();
-  res.status(200).json(responses);
+  res.status(200).json(forms);
 }

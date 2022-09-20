@@ -18,6 +18,12 @@ export default async function handler(
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
+  try {
+    new ObjectId(String(req.query.id));
+  } catch {
+    res.status(400).json({ error: "Invalid Form ID" });
+    return;
+  }
   const client = await clientPromise;
   const db = client.db();
   const collection = db.collection<Response>("responses");
@@ -30,7 +36,7 @@ export default async function handler(
       return;
     }
     const formsCollection = db.collection<Form>("forms");
-    const form = formsCollection.findOne({
+    const form = await formsCollection.findOne({
       $and: [
         { _id: new ObjectId(String(response.form)) },
         {
@@ -56,11 +62,14 @@ export default async function handler(
       return;
     }
     const formsCollection = db.collection<Form>("forms");
-    const form = formsCollection.findOne({
+    const form = await formsCollection.findOne({
       $and: [
         { _id: new ObjectId(String(response.form)) },
         {
-          "permissions.owners": session.user.id,
+          $or: [
+            { "permissions.owners": session.user.id },
+            { "permissions.editors": session.user.id },
+          ],
         },
       ],
     });
@@ -72,7 +81,7 @@ export default async function handler(
       _id: new ObjectId(String(req.query.id)),
     });
     if (result.deletedCount == 0) {
-      res.status(404).json({ error: "Error deleting" });
+      res.status(404).json({ error: "Error deleting response" });
       return;
     }
     res.status(200).json({ success: true });

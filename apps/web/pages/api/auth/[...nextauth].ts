@@ -22,6 +22,8 @@ export const authOptions: NextAuthOptions = {
       return false;
     },
     async session({ session, user, token }) {
+      session.user.name = session.user.name ?? null;
+      session.user.image = session.user.image ?? null;
       return {
         ...session,
         user: {

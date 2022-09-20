@@ -1,0 +1,38 @@
+import type { GetServerSideProps, NextPage } from "next";
+import { Session, unstable_getServerSession } from "next-auth";
+import MainContainer from "../components/MainContainer";
+import { authOptions } from "./api/auth/[...nextauth]";
+
+interface Props {
+  session: Session;
+}
+
+const Form: NextPage<Props> = ({ session }) => {
+  return (
+    <MainContainer>
+      <h1>Form</h1>
+    </MainContainer>
+  );
+};
+
+export default Form;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/api/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {
+      session,
+    },
+  };
+};
