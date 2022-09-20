@@ -2,7 +2,7 @@
 import { ObjectId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { User, WithStringId } from "types/dist/database";
+import { Form, User, WithStringId } from "types/dist/database";
 import clientPromise from "../../../lib/mongodb";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -46,6 +46,10 @@ export default async function handler(
       _id: new ObjectId(String(req.query.userId)),
     });
     if (result.deletedCount == 1) {
+      const formsCollection = db.collection<Form>("forms");
+      await formsCollection.deleteMany({
+        createdBy: req.query.userId,
+      });
       res.status(200).json({ success: true });
     } else {
       res.status(200).json({ success: false });
