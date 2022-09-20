@@ -8,6 +8,8 @@ import { getUser } from "../../api/user/[userId]";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 interface Props {
   session: Session;
@@ -34,6 +36,7 @@ const EditUserPage: NextPage<Props> = ({ session, user }) => {
       image: user.image
     }
   });
+  const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const response = await fetch('/api/user/' + user._id, {
       method: 'PUT',
@@ -48,6 +51,20 @@ const EditUserPage: NextPage<Props> = ({ session, user }) => {
       alert("Failed to update user");
     }
   };
+  const deleteAccount = async () => {
+    if (!confirmDeleteAccount) {
+      setConfirmDeleteAccount(true);
+      return;
+    }
+    const response = await fetch('/api/user/' + user._id, {
+      method: 'DELETE',
+    });
+    if (response.status == 200) {
+      signOut();
+    } else {
+      alert("Failed to delete user");
+    }
+  }
   return (
     <MainContainer>
       <h1 className="text-3xl">Edit User: {user.name}</h1>
@@ -74,6 +91,9 @@ const EditUserPage: NextPage<Props> = ({ session, user }) => {
         </div>
         <button className="btn btn-primary mt-2" type="submit">Save</button>
       </form>
+      <div className="flex flex-row justify-center">
+        <button className="btn btn-error btn-md" onClick={deleteAccount}>{confirmDeleteAccount ? "Are you sure?" : "Delete account"}</button>
+      </div>
     </MainContainer>
   );
 };
