@@ -9,6 +9,7 @@ import { fetcher } from "../../lib/utils";
 import { BsPencilFill } from "react-icons/bs";
 import Link from "next/link";
 import { useState } from "react";
+import { AnimatePresence, motion } from 'framer-motion'
 
 interface Props {
   session: Session;
@@ -70,28 +71,33 @@ const FormResponsesPage: NextPage<Props> = ({ session }) => {
       )}
       {!!(responses?.length) && (
         <div className="flex flex-col gap-3 mt-5">
-          {responses.map(response => (
-            <div key={response._id} className="card bg-neutral text-neutral-content">
-              <div className="card-body">
-                <h3 className="card-title">Response: {response._id}</h3>
-                <div className="flex flex-col gap-2">
-                  {Object.entries(response.data).map(([key, value]) => (
-                    <div key={key}>
-                      <span className="font-bold">{key}: </span>
-                      <span>{String(value)}</span>
+          <AnimatePresence>
+            {responses.map(response => (
+              <motion.div key={response._id} layout>
+                <div className="card bg-neutral text-neutral-content">
+                  <div className="card-body">
+                    <h3 className="card-title">Response: {response._id}</h3>
+                    <div className="flex flex-col gap-2">
+                      {Object.entries(response.data).map(([key, value]) => (
+                        <div key={key}>
+                          <span className="font-bold">{key}: </span>
+                          <span>{String(value)}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                    {
+                      (form?.permissions.owners.includes(session.user.id) || form?.permissions.editors.includes(session.user.id)) && (
+                        <div className="card-actions mt-3">
+                          <button className="btn btn-error" onClick={() => deleteResponse(response._id)}>{deletingId == response._id ? 'Confirm Delete' : 'Delete'}</button>
+                        </div>
+                      )
+                    }
+                  </div>
                 </div>
-                {
-                  (form?.permissions.owners.includes(session.user.id) || form?.permissions.editors.includes(session.user.id)) && (
-                    <div className="card-actions mt-3">
-                      <button className="btn btn-error" onClick={() => deleteResponse(response._id)}>{deletingId == response._id ? 'Confirm Delete' : 'Delete'}</button>
-                    </div>
-                  )
-                }
-              </div>
-            </div>
+              </motion.div>
+
           ))}
+          </AnimatePresence>
         </div>
       )}
     </MainContainer>
