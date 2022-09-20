@@ -4,6 +4,7 @@ import { unstable_getServerSession } from "next-auth";
 import clientPromise from "../../../lib/mongodb";
 import { authOptions } from "../auth/[...nextauth]";
 import { Form } from "types/dist/database";
+import { randomBytes } from "crypto";
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,7 +35,7 @@ export default async function handler(
     name: body.name,
     createdBy: session.user.id,
     createdAt: new Date(),
-    updateToken: null,
+    updateToken: randomBytes(48).toString("hex"),
     permissions: {
       owners: [session.user.id],
       editors: [],
