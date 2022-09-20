@@ -17,13 +17,13 @@ export default async function handler(
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
-  if (!session.admin) {
+  if (!session.user.admin) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
   const client = await clientPromise;
   const db = client.db();
   const collection = db.collection<User>("users");
-  const users = collection.find().sort({ createdAt: 1 }).toArray();
+  const users = await collection.find().sort({ createdAt: 1 }).toArray();
   res.status(200).json(users);
 }

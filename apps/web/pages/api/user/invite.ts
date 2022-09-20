@@ -13,12 +13,16 @@ export default async function handler(
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
+  if (req.headers["content-type"] != "application/json") {
+    res.status(400).json({ error: "Bad request" });
+    return;
+  }
   const session = await unstable_getServerSession(req, res, authOptions);
   if (!session) {
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
-  if (!session.admin) {
+  if (!session.user.admin) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
@@ -26,12 +30,14 @@ export default async function handler(
   const db = client.db();
   const collection = db.collection<User>("users");
   const result = await collection.insertOne({
+    name: req.body.email,
     email: req.body.email,
+    image: "/defaultImage.jpg",
     admin: req.body.admin,
     emailVerified: new Date(),
   });
   if (result.insertedId) {
-    res.status(200).json({ id: result.insertedId });
+    res.status(200).json({ _id: result.insertedId });
   } else {
     res.status(500).json({ error: "Internal server error" });
     return;

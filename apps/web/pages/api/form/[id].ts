@@ -10,7 +10,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method != "POST" && req.method != "GET" && req.method != "PATCH") {
+  if (req.method != "POST" && req.method != "GET" && req.method != "PUT") {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
@@ -22,10 +22,16 @@ export default async function handler(
   const client = await clientPromise;
   const db = client.db();
 
-  if ((req.method = "GET")) {
+  if (req.method == "GET") {
     const collection = db.collection<Form>("forms");
     // Get form information
-    const form = collection.findOne({
+    try {
+      new ObjectId(String(req.query.id));
+    } catch {
+      res.status(400).json({ error: "Invalid Form ID" });
+      return;
+    }
+    const form = await collection.findOne({
       $and: [
         { _id: new ObjectId(String(req.query.id)) },
         {
@@ -43,7 +49,7 @@ export default async function handler(
     } else {
       res.status(200).json(form);
     }
-  } else if ((req.method = "PATCH")) {
+  } else if (req.method == "PUT") {
     // Update form information
     if (req.headers["content-type"] != "application/json") {
       res.status(400).json({ error: "Bad request" });
@@ -55,15 +61,10 @@ export default async function handler(
       return;
     }
     const collection = db.collection<Form>("forms");
-    const form = collection.findOne({
+    const form = await collection.findOne({
       $and: [
         { _id: new ObjectId(String(req.query.id)) },
-        {
-          $or: [
-            { "permissions.owners": session.user.id },
-            { "permissions.editors": session.user.id },
-          ],
-        },
+        { "permissions.owners": session.user.id },
       ],
     });
     if (!form) {
@@ -76,11 +77,11 @@ export default async function handler(
         $set: {
           name: body.name,
           updateToken: body.updateToken,
-          permissions: {
-            owners: body.permissions.owners,
-            editors: body.permissions.editors,
-            viewers: body.permissions.viewers,
-          },
+          // permissions: {
+          //   owners: body.permissions.owners
+          //   editors: body.permissions.editors,
+          //   viewers: body.permissions.viewers,
+          // },
           submissionsPaused: body.submissionsPaused,
         },
       }
@@ -99,6 +100,32 @@ export default async function handler(
       res.status(400).json({ error: "Bad request" });
       return;
     }
+    try {
+      new ObjectId(String(req.query.id));
+    } catch {
+      res.status(400).json({ error: "Invalid Form ID" });
+      return;
+    }
+    const formCollection = db.collection<Form>("forms");
+    const form = await formCollection.findOne({
+      _id: new ObjectId(String(req.query.id)),
+    });
+    if (!form) {
+      res.status(404).json({ error: "Form not found" });
+      return;
+    }
+    if (!form.updateToken) {
+      res.status(400).json({ error: "No update token has been configured" });
+      return;
+    }
+    if (form.updateToken != req.headers.authorization) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    if (form.submissionsPaused) {
+      res.status(403).json({ error: "Submissions are paused" });
+      return;
+    }
     let body;
     if (req.headers["content-type"] == "application/x-www-form-urlencoded") {
       const data = new FormData(req.body);
@@ -111,11 +138,26 @@ export default async function handler(
       data: body ?? req.body,
     });
     if (result.insertedId) {
-      res.status(200).json({ id: result.insertedId });
+      res.status(200).json({ _id: result.insertedId });
       return;
     } else {
       res.status(500).json({ error: "Internal server error" });
       return;
     }
   }
+}
+
+export async function getForm(formid: string): Promise<Form | null> {
+  const client = await clientPromise;
+  const db = client.db();
+  try {
+    new ObjectId(formid);
+  } catch {
+    return null;
+  }
+  const formCollection = db.collection<Form>("forms");
+  const form = await formCollection.findOne({
+    _id: new ObjectId(formid),
+  });
+  return JSON.parse(JSON.stringify(form));
 }

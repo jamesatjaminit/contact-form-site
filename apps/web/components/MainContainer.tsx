@@ -6,9 +6,9 @@ interface Props {
 }
 const MainContainer: NextPage<Props> = ({ children }) => {
   return (
-    <div>
+    <div className="min-h-screen">
       <NavBar />
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 mt-5">
         {children}
       </div>
     </div>

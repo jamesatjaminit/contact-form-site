@@ -7,7 +7,9 @@ const NavBar: NextPage = () => {
   return (
     <div className="navbar bg-base-300">
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <Link href="/">
+          <a className="btn btn-ghost normal-case text-xl">Contact Admin</a>
+        </Link>
       </div>
       <div className="flex-none">
         {
@@ -24,7 +26,7 @@ const NavBar: NextPage = () => {
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
-                    <img src="https://placeimg.com/80/80/people" />
+                    <img src={session.user.image ?? '/defaultImage.jpg'} width={80} height={80} alt="Profile Image" />
                   </div>
                 </label>
 
