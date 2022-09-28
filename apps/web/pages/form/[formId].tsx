@@ -10,14 +10,15 @@ import { BsPencilFill } from "react-icons/bs";
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from 'framer-motion'
+import { getForm } from "../api/form/[id]";
 
 interface Props {
   session: Session;
+  form: WithStringId<Form>;
 }
 
-const FormResponsesPage: NextPage<Props> = ({ session }) => {
+const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
   const router = useRouter();
-  const { data: form, error: formFetchError, } = useSWR<WithStringId<Form>>('/api/form/' + router.query.formId, fetcher, { refreshInterval: 10000 });
   const { data: responses, error: responsesFetchError, mutate: mutateResponses } = useSWR<WithStringId<Response>[]>('/api/form/' + router.query.formId + '/responses', fetcher);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const deleteResponse = async (responseId: string) => {
@@ -44,14 +45,6 @@ const FormResponsesPage: NextPage<Props> = ({ session }) => {
           </Link>
         </div>
       )}
-      {formFetchError && (
-        <div className="alert alert-error shadow-lg mt-5">
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span>Error: Failed to fetch form.</span>
-          </div>
-        </div>
-      )}
       <h2 className="text-2xl">Responses: </h2>
       {responsesFetchError && (
         <div className="alert alert-error shadow-lg mt-5">
@@ -61,7 +54,7 @@ const FormResponsesPage: NextPage<Props> = ({ session }) => {
           </div>
         </div>
       )}
-      {!responses?.length && (
+      {!!(!responses?.length && !responsesFetchError) && (
         <div className="alert alert-info shadow-lg mt-5">
           <div>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current flex-shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -119,9 +112,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+  const form = await getForm(context.params?.formId as string);
+  if (!form) {
+    return {
+      notFound: true
+    };
+  }
   return {
     props: {
       session,
+      form
     },
   };
 };
