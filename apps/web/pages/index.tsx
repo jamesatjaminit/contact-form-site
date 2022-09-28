@@ -13,7 +13,10 @@ interface Props {
   stats: StatsResponse | undefined;
 }
 const Home: NextPage<Props> = ({ session, stats }) => {
-  const { data: forms, error: getFormsError } = useSWR<WithStringId<Form>[]>('/api/user/' + (session?.user.id ?? "") + '/forms', fetcher);
+  const { data: forms, error: getFormsError } = useSWR<WithStringId<Form>[]>(
+    "/api/user/" + (session?.user.id ?? "") + "/forms",
+    fetcher
+  );
   if (!session) {
     return (
       <MainContainer>
@@ -28,8 +31,12 @@ const Home: NextPage<Props> = ({ session, stats }) => {
       <div className="grid grid-flow-col auto-cols-auto">
         <div className="stats shadow mt-5 max-w-fit">
           <div className="stat">
-            <div className="stat-title text-center">Total Responses Handled</div>
-            <div className="stat-value text-center">{stats?.totalResponses}</div>
+            <div className="stat-title text-center">
+              Total Responses Handled
+            </div>
+            <div className="stat-value text-center">
+              {stats?.totalResponses}
+            </div>
           </div>
           <div className="stat">
             <div className="stat-title text-center">Total Forms</div>
@@ -43,13 +50,16 @@ const Home: NextPage<Props> = ({ session, stats }) => {
         <div>
           <h2 className="text-2xl mt-5">Forms</h2>
           <ul className="list-disc list-inside">
-            {forms && forms.map((form) => (
-              <li key={form._id}>
-                <Link href={"/form/" + form._id}>
-                  <a className="text-accent hover:text-accent-focus">{form.name}</a>
-                </Link>
-              </li>
-            ))}
+            {forms &&
+              forms.map((form) => (
+                <li key={form._id}>
+                  <Link href={"/form/" + form._id}>
+                    <a className="text-accent hover:text-accent-focus">
+                      {form.name}
+                    </a>
+                  </Link>
+                </li>
+              ))}
           </ul>
         </div>
       </div>

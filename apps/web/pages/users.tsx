@@ -6,13 +6,16 @@ import { fetcher } from "../lib/utils";
 import { authOptions } from "./api/auth/[...nextauth]";
 import useSWR from "swr";
 import type { User, WithStringId } from "types/dist/database";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 interface Props {
   session: Session;
 }
 
 const UsersPage: NextPage<Props> = ({ session }) => {
-  const { data: users, error } = useSWR<WithStringId<User>[]>('/api/users', fetcher);
+  const { data: users, error } = useSWR<WithStringId<User>[]>(
+    "/api/users",
+    fetcher
+  );
   return (
     <MainContainer>
       <h1 className="text-3xl">Users</h1>
@@ -31,7 +34,10 @@ const UsersPage: NextPage<Props> = ({ session }) => {
                     <div className="card-body">
                       <h2 className="card-title">{user.email}</h2>
                       <p>Email: {user.email}</p>
-                      <p>Account Created: {dayjs(user.emailVerified).format("DD/MM/YYYY hh:mm")}</p>
+                      <p>
+                        Account Created:{" "}
+                        {dayjs(user.emailVerified).format("DD/MM/YYYY hh:mm")}
+                      </p>
                       <p>Administrator: {user.admin ? "Yes" : "No"}</p>
                     </div>
                   </div>
