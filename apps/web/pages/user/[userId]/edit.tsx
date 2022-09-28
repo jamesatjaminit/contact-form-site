@@ -130,7 +130,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/api/auth/signin",
+        destination:
+          "/api/auth/signin?callbackUrl=" +
+          encodeURIComponent(context.resolvedUrl),
         permanent: false,
       },
     };
@@ -138,10 +140,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = await getUser(context.query.userId as string);
   if (!user || (user && !session.user.admin && user._id !== session.user.id)) {
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
+      notFound: true,
     };
   }
   return {

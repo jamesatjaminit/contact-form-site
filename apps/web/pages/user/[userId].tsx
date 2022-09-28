@@ -77,9 +77,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/api/auth/signin",
+        destination:
+          "/api/auth/signin?callbackUrl=" +
+          encodeURIComponent(context.resolvedUrl),
         permanent: false,
       },
+    };
+  }
+  if (context.query.userId != session.user.id && !session.user.admin) {
+    return {
+      notFound: true,
     };
   }
   return {
