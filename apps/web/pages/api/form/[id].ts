@@ -115,7 +115,7 @@ export default async function handler(
       return;
     }
     if (!form.updateToken) {
-      res.status(400).json({ error: "No update token has been configured" });
+      res.status(400).json({ error: "No token has been configured" });
       return;
     }
     if (form.updateToken != req.headers.authorization) {
