@@ -128,14 +128,14 @@ export default async function handler(
     }
     let body;
     if (req.headers["content-type"] == "application/x-www-form-urlencoded") {
-      const data = new FormData(req.body);
-      body = JSON.stringify(Object.fromEntries(data));
+      const data = new URLSearchParams(req.body);
+      body = Object.fromEntries(data.entries());
     }
     const collection = db.collection<Response>("responses");
     const result = await collection.insertOne({
       form: String(req.query.id),
       createdAt: new Date(),
-      data: body ?? req.body,
+      data: body ?? {},
     });
     if (result.insertedId) {
       res.status(200).json({ _id: result.insertedId });
