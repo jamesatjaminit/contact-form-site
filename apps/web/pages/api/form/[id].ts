@@ -15,14 +15,13 @@ export default async function handler(
     return;
   }
   const session = await unstable_getServerSession(req, res, authOptions);
-  if (!session) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
   const client = await clientPromise;
   const db = client.db();
-
   if (req.method == "GET") {
+    if (!session) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
     const collection = db.collection<Form>("forms");
     // Get form information
     try {
@@ -50,6 +49,10 @@ export default async function handler(
       res.status(200).json(form);
     }
   } else if (req.method == "PUT") {
+    if (!session) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
     // Update form information
     if (req.headers["content-type"] != "application/json") {
       res.status(400).json({ error: "Bad request" });
