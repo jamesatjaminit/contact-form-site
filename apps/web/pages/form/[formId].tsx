@@ -17,7 +17,7 @@ interface Props {
 
 const FormResponsesPage: NextPage<Props> = ({ session }) => {
   const router = useRouter();
-  const { data: form, error: formFetchError, } = useSWR<WithStringId<Form>>('/api/form/' + router.query.formId, fetcher);
+  const { data: form, error: formFetchError, } = useSWR<WithStringId<Form>>('/api/form/' + router.query.formId, fetcher, { refreshInterval: 10000 });
   const { data: responses, error: responsesFetchError, mutate: mutateResponses } = useSWR<WithStringId<Response>[]>('/api/form/' + router.query.formId + '/responses', fetcher);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const deleteResponse = async (responseId: string) => {
