@@ -133,6 +133,8 @@ export default async function handler(
     if (req.headers["content-type"] == "application/x-www-form-urlencoded") {
       const data = new URLSearchParams(req.body);
       body = Object.fromEntries(data.entries());
+    } else {
+      body = req.body;
     }
     const collection = db.collection<Response>("responses");
     const result = await collection.insertOne({
