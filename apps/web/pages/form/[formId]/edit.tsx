@@ -108,7 +108,7 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
           ))}
           <button type="button" onClick={() => appendOwnerField({})} className="btn btn-secondary btn-md w-24">Add Owner</button>
         </div> */}
-        <p>Responses URL: https://{process.env.NEXTAUTH_URL}/api/form/{form._id}</p>
+        <p>Responses URL: https://{process.env.NEXT_PUBLIC_HOST}/api/form/{form._id}</p>
         <button className="btn btn-primary btn-md" type="submit">Save</button>
       </form>
     </MainContainer>
