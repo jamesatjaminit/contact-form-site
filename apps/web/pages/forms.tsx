@@ -11,7 +11,7 @@ interface Props {
 }
 
 const FormsPage: NextPage<Props> = ({ session }) => {
-  const { data, error } = useSWR<WithStringId<Form>[]>(
+  const { data, error, isValidating } = useSWR<WithStringId<Form>[]>(
     "/api/user/" + session.user.id + "/forms",
     fetcher
   );
@@ -60,7 +60,7 @@ const FormsPage: NextPage<Props> = ({ session }) => {
         </div>
       )}
       {!data && <div>Loading Forms...</div>}
-      {!data?.length && (
+      {!!(!data?.length && !isValidating) && (
         <div className="alert alert-info shadow-lg mt-5">
           <div>
             <svg
