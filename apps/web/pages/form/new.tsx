@@ -13,21 +13,21 @@ const NewFormPage: NextPage<Props> = ({ session }) => {
   const submitForm = async (e: any) => {
     e.preventDefault();
     const form = new FormData(e.target as HTMLFormElement);
-    const formName = form.get('name');
-    const response = await fetch('/api/form/new', {
-      method: 'POST',
+    const formName = form.get("name");
+    const response = await fetch("/api/form/new", {
+      method: "POST",
       body: JSON.stringify({
         name: formName,
       }),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     if (response.status == 200) {
       const responseJson = await response.json();
-      router.push('/form/' + responseJson._id);
+      router.push("/form/" + responseJson._id);
     } else {
-      alert('Failed to create form!');
+      alert("Failed to create form!");
     }
   };
   return (
@@ -40,11 +40,18 @@ const NewFormPage: NextPage<Props> = ({ session }) => {
           </label>
           <label className="input-group">
             <span>Name</span>
-            <input type="text" placeholder="My Test Form" className="input input-bordered" name="name" />
+            <input
+              type="text"
+              placeholder="My Test Form"
+              className="input input-bordered"
+              name="name"
+            />
           </label>
         </div>
         <div className="flex flex-col justify-center mt-3">
-          <button type="submit" className="btn btn-primary btn-md">Create</button>
+          <button type="submit" className="btn btn-primary btn-md">
+            Create
+          </button>
         </div>
       </form>
     </MainContainer>

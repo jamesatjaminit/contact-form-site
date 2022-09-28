@@ -19,34 +19,37 @@ interface Inputs {
   name: string;
   email: string;
   image: string;
-
 }
 const schema = z.object({
   name: z.string().min(1, { message: "Please enter a name" }).trim(),
   email: z.string().email({ message: "Please enter a valid email" }),
-  image: z.string().url({ message: "Please enter a valid image URL" })
+  image: z.string().url({ message: "Please enter a valid image URL" }),
 });
 const EditUserPage: NextPage<Props> = ({ session, user }) => {
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: user.name,
       email: user.email,
-      image: user.image
-    }
+      image: user.image,
+    },
   });
   const [confirmDeleteAccount, setConfirmDeleteAccount] = useState(false);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const response = await fetch('/api/user/' + user._id, {
-      method: 'PUT',
+    const response = await fetch("/api/user/" + user._id, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
     if (response.status == 200) {
-      router.push('/user/' + user._id);
+      router.push("/user/" + user._id);
     } else {
       alert("Failed to update user");
     }
@@ -56,15 +59,15 @@ const EditUserPage: NextPage<Props> = ({ session, user }) => {
       setConfirmDeleteAccount(true);
       return;
     }
-    const response = await fetch('/api/user/' + user._id, {
-      method: 'DELETE',
+    const response = await fetch("/api/user/" + user._id, {
+      method: "DELETE",
     });
     if (response.status == 200) {
       signOut();
     } else {
       alert("Failed to delete user");
     }
-  }
+  };
   return (
     <MainContainer>
       <h1 className="text-3xl">Edit User: {user.name}</h1>
@@ -73,26 +76,45 @@ const EditUserPage: NextPage<Props> = ({ session, user }) => {
           <div className="form-control">
             <label className="input-group">
               <span>Name</span>
-              <input type="text" placeholder="Name" className="input input-bordered" {...register("name")} />
+              <input
+                type="text"
+                placeholder="Name"
+                className="input input-bordered"
+                {...register("name")}
+              />
             </label>
           </div>
           <div className="form-control">
             <label className="input-group">
               <span>Email</span>
-              <input type="email" placeholder="Email" className="input input-bordered" {...register("email")} />
+              <input
+                type="email"
+                placeholder="Email"
+                className="input input-bordered"
+                {...register("email")}
+              />
             </label>
           </div>
           <div className="form-control">
             <label className="input-group">
               <span>Profile Image</span>
-              <input type="text" placeholder="/image.jpg" className="input input-bordered" {...register("image")} />
+              <input
+                type="text"
+                placeholder="/image.jpg"
+                className="input input-bordered"
+                {...register("image")}
+              />
             </label>
           </div>
         </div>
-        <button className="btn btn-primary mt-2" type="submit">Save</button>
+        <button className="btn btn-primary mt-2" type="submit">
+          Save
+        </button>
       </form>
       <div className="flex flex-row justify-center">
-        <button className="btn btn-error btn-md" onClick={deleteAccount}>{confirmDeleteAccount ? "Are you sure?" : "Delete account"}</button>
+        <button className="btn btn-error btn-md" onClick={deleteAccount}>
+          {confirmDeleteAccount ? "Are you sure?" : "Delete account"}
+        </button>
       </div>
     </MainContainer>
   );
@@ -114,7 +136,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
   const user = await getUser(context.query.userId as string);
-  if (!user || (user && (!session.user.admin && user._id !== session.user.id))) {
+  if (!user || (user && !session.user.admin && user._id !== session.user.id)) {
     return {
       redirect: {
         destination: "/",
