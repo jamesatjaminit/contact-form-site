@@ -84,7 +84,11 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
           </div>
         </div>
       )}
-      {!!(!responses?.length && !responsesFetchError) && (
+      {!!(
+        !responses?.length &&
+        !responsesIsValidating &&
+        !responsesFetchError
+      ) && (
         <div className="alert alert-info shadow-lg mt-5">
           <div>
             <svg
