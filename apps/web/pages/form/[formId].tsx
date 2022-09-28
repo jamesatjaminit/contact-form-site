@@ -45,17 +45,15 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
   return (
     <MainContainer>
       <h1 className="text-3xl">Form: {form ? form.name : "Loading..."}</h1>
-      {form &&
-        (form.permissions.owners.includes(session.user.id) ||
-          form.permissions.editors.includes(session.user.id)) && (
-          <div className="flex flex-row justify-end">
-            <Link href={`/form/${router.query.formId}/edit`}>
-              <a className="btn btn-primary">
-                <BsPencilFill />
-              </a>
-            </Link>
-          </div>
-        )}
+      {!!(form && form.permissions.owners.includes(session.user.id)) && (
+        <div className="flex flex-row justify-end">
+          <Link href={`/form/${router.query.formId}/edit`}>
+            <a className="btn btn-primary">
+              <BsPencilFill />
+            </a>
+          </Link>
+        </div>
+      )}
       <h2 className="text-2xl">Responses: </h2>
       {responsesFetchError && (
         <div className="alert alert-error shadow-lg mt-5">
