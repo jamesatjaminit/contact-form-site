@@ -23,6 +23,7 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
     data: responses,
     error: responsesFetchError,
     mutate: mutateResponses,
+    isValidating: responsesIsValidating,
   } = useSWR<WithStringId<Response>[]>(
     "/api/form/" + router.query.formId + "/responses",
     fetcher
@@ -45,15 +46,23 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
   return (
     <MainContainer>
       <h1 className="text-3xl">Form: {form ? form.name : "Loading..."}</h1>
-      {!!(form && form.permissions.owners.includes(session.user.id)) && (
-        <div className="flex flex-row justify-end">
+      <div className="flex flex-row justify-end gap-2">
+        <button
+          className={`btn btn-primary ${
+            responsesIsValidating ? "loading btn-disabled" : ""
+          }`}
+          onClick={() => mutateResponses()}
+        >
+          Refresh
+        </button>
+        {!!(form && form.permissions.owners.includes(session.user.id)) && (
           <Link href={`/form/${router.query.formId}/edit`}>
-            <a className="btn btn-primary">
+            <a className="btn btn-secondary">
               <BsPencilFill />
             </a>
           </Link>
-        </div>
-      )}
+        )}
+      </div>
       <h2 className="text-2xl">Responses: </h2>
       {responsesFetchError && (
         <div className="alert alert-error shadow-lg mt-5">
