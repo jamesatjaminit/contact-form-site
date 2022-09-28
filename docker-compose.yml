@@ -1,6 +1,8 @@
 services:
   web:
-   build: 
+    env_file:
+      - .env
+    build: 
       context: .
       dockerfile: apps/web/Dockerfile
       labels:
@@ -8,3 +10,4 @@ services:
         - traefik.http.routers.contactFormSite.rule=Host(`c.jaminit.co.uk`)
         - traefik.http.routers.contacthandler.tls= true
         - traefik.http.routers.contacthandler.tls.certresolver=le
+      

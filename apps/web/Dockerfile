@@ -1,6 +1,7 @@
 FROM node:16 as builder
 WORKDIR /app
 COPY . .
+COPY .env /app/apps/web/.env.production
 RUN npm install -g pnpm
 RUN pnpm install
 RUN pnpm turbo run build
