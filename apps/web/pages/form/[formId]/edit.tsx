@@ -165,10 +165,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const form = await getForm(context.params?.formId as string);
   if (!form || !form.permissions.owners.includes(session.user.id)) {
     return {
-      redirect: {
-        destination: "/form/notFound",
-        permanent: false,
-      },
+      notFound: true,
     };
   }
   return {
