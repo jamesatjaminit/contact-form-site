@@ -1,8 +1,9 @@
 import type { NextPage } from "next";
+import { ReactNode } from "react";
 import NavBar from "./NavBar";
 
 interface Props {
-  children: React.ReactNode | React.ReactNode[];
+  children: ReactNode | ReactNode[];
 }
 const MainContainer: NextPage<Props> = ({ children }) => {
   return (

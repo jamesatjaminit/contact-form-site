@@ -1,5 +1,5 @@
 {
-  "name": "types",
+  "name": "notification-server",
   "version": "1.0.0",
   "description": "",
   "main": "dist/main.js",
@@ -15,11 +15,10 @@
     "@types/node": "16",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
-    "eslint": "^8.24.0",
+    "eslint": "8.24.0",
     "prettier": "2.7.1",
     "typescript": "^4.8.4"
   },
-  "types": "dist/main.d.ts",
   "files": [
     "dist/"
   ]
