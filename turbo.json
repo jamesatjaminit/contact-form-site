@@ -9,6 +9,14 @@
         "dist/**",
         ".next/**"
       ]
+    },
+    "lint": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "format": {
+      "dependsOn": [],
+      "outputs": []
     }
   }
 }
