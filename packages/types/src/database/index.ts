@@ -19,6 +19,7 @@ export interface Response {
   form: string;
   createdAt: Date;
   data: Record<string, unknown>;
+  notified: boolean;
 }
 
 export interface User {
