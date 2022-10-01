@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
-import useSWR from "swr";
 import type { WithStringId, Form } from "types/dist/database";
 import MainContainer from "../../../components/MainContainer";
 import { authOptions } from "../../api/auth/[...nextauth]";

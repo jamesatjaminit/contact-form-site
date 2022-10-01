@@ -146,6 +146,7 @@ export default async function handler(
       form: String(req.query.id),
       createdAt: new Date(),
       data: body ?? {},
+      notified: false,
     });
     if (result.insertedId) {
       res.status(200).json({ _id: result.insertedId });
