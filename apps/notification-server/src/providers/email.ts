@@ -15,7 +15,7 @@ const handler = async (
   for (const email of emails) {
     const message: Mail.Options = {
       to: email,
-      from: `NoReply <${process.env.EMAIL_FROM}>`,
+      from: `noreply <${process.env.EMAIL_FROM}>`,
       subject: `${form.name} - New Response`,
       text: `Hey,\nThere is a new response on your contact form "${
         form.name
