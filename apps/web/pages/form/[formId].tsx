@@ -11,6 +11,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getForm } from "../api/form/[id]";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 interface Props {
   session: Session;
@@ -113,9 +116,21 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
           <AnimatePresence>
             {responses.map((response) => (
               <motion.div key={response._id} layout>
-                <div className="card bg-neutral text-neutral-content">
+                <div className="card bg-base-200 shadow-xl">
                   <div className="card-body">
-                    <h3 className="card-title">Response: {response._id}</h3>
+                    <div className="flex flex-row justify-between items-center">
+                      <h3 className="card-title">Response: {response._id}</h3>
+                      <div
+                        className="tooltip"
+                        data-tip={dayjs(response.createdAt).format(
+                          "DD/MM/YY HH:mm:ss"
+                        )}
+                      >
+                        <span className="badge badge-accent font-bold">
+                          {dayjs(response.createdAt).fromNow()}
+                        </span>
+                      </div>
+                    </div>
                     <div className="flex flex-col gap-2">
                       {Object.entries(response.data).map(([key, value]) => (
                         <div key={key}>

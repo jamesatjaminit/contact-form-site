@@ -23,7 +23,7 @@ interface Inputs {
 const schema = z.object({
   name: z.string().min(1, { message: "Please enter a name" }).trim(),
   email: z.string().email({ message: "Please enter a valid email" }),
-  image: z.string().url({ message: "Please enter a valid image URL" }),
+  image: z.string().min(1, { message: "Please enter a valid image URL" }),
 });
 const EditUserPage: NextPage<Props> = ({ session, user }) => {
   const router = useRouter();

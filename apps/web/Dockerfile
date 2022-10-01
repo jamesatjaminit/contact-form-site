@@ -4,7 +4,7 @@ COPY . .
 COPY .env /app/apps/web/.env.production
 RUN npm install -g pnpm
 RUN pnpm install
-RUN pnpm turbo run build
+RUN pnpm turbo run build --filter=web
 RUN pnpm --filter=web --prod deploy output
 
 FROM node:16-alpine

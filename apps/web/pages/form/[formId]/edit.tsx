@@ -9,6 +9,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getForm } from "../../api/form/[id]";
+import { useState } from "react";
 interface Props {
   session: Session;
   form: WithStringId<Form>;
@@ -38,6 +39,7 @@ const schema = z.object({
 
 const EditFormPage: NextPage<Props> = ({ session, form }) => {
   const router = useRouter();
+  const [confirmDeleteForm, setConfirmDeleteForm] = useState(false);
   const {
     register,
     handleSubmit,
@@ -60,7 +62,6 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
   //   name: "permissions.owners", // unique name for your Field Array
   // });
   const submitHandler: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
     const response = await fetch("/api/form/" + form._id, {
       method: "PUT",
       body: JSON.stringify(data),
@@ -73,6 +74,20 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
       router.push("/form/" + responseJson._id);
     } else {
       alert("Failed to update form!");
+    }
+  };
+  const deleteForm = async () => {
+    if (!confirmDeleteForm) {
+      setConfirmDeleteForm(true);
+      return;
+    }
+    const response = await fetch("/api/form/" + form._id, {
+      method: "DELETE",
+    });
+    if (response.status == 200) {
+      router.push("/forms");
+    } else {
+      alert("Failed to delete form.");
     }
   };
   return (
@@ -139,9 +154,14 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
           Responses URL: https://{process.env.NEXT_PUBLIC_HOST}/api/form/
           {form._id}
         </p>
-        <button className="btn btn-primary btn-md" type="submit">
-          Save
-        </button>
+        <div className="flex flex-row gap-2">
+          <button className="btn btn-error" type="button" onClick={deleteForm}>
+            {confirmDeleteForm ? "Confirm Delete" : "Delete Form"}
+          </button>
+          <button className="btn btn-primary btn-md" type="submit">
+            Save
+          </button>
+        </div>
       </form>
     </MainContainer>
   );
