@@ -1,7 +1,7 @@
 FROM node:16 as builder
 WORKDIR /app
 COPY . .
-COPY .env /app/apps/web/.env.production
+COPY .env /app/apps/notification-server/.env
 RUN npm install -g pnpm
 RUN pnpm install
 RUN pnpm turbo run build --filter=notification-server
