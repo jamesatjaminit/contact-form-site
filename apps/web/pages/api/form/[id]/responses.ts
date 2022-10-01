@@ -41,7 +41,7 @@ export default async function handler(
     ],
   });
   if (!form) {
-    res.status(404).json({ error: "Not found" });
+    res.status(404).json({ error: "Form not found" });
     return;
   }
   const responsesCollection = db.collection<Response>("responses");

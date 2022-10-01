@@ -10,7 +10,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method != "POST" && req.method != "GET" && req.method != "PUT") {
+  if (
+    req.method != "POST" &&
+    req.method != "GET" &&
+    req.method != "PUT" &&
+    req.method != "DELETE"
+  ) {
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
@@ -145,6 +150,31 @@ export default async function handler(
     if (result.insertedId) {
       res.status(200).json({ _id: result.insertedId });
       return;
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+  } else if (req.method == "DELETE") {
+    if (!session) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const collection = db.collection<Form>("forms");
+    const form = await collection.findOne({
+      $and: [
+        { _id: new ObjectId(String(req.query.id)) },
+        { "permissions.owners": session.user.id },
+      ],
+    });
+    if (!form) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    const result = await collection.deleteOne({
+      _id: new ObjectId(String(req.query.id)),
+    });
+    if (result.deletedCount == 1) {
+      res.status(200).json({ success: true });
     } else {
       res.status(500).json({ error: "Internal server error" });
       return;
