@@ -1,5 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
+import { NextSeo } from "next-seo";
 import Link from "next/link";
 import useSWR from "swr";
 import type { Form, WithStringId } from "types/dist/database";
@@ -27,6 +28,7 @@ const Home: NextPage<Props> = ({ session, stats }) => {
   }
   return (
     <MainContainer>
+      <NextSeo title="Home" />
       <h1 className="text-3xl">Contact Form Site</h1>
       <div className="grid grid-flow-col auto-cols-auto">
         <div className="stats shadow mt-5 max-w-fit">

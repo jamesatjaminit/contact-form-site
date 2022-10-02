@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { getForm } from "../api/form/[id]";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { NextSeo } from "next-seo";
 dayjs.extend(relativeTime);
 
 interface Props {
@@ -48,6 +49,7 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
   };
   return (
     <MainContainer>
+      <NextSeo title={form.name} />
       <h1 className="text-3xl">Form: {form ? form.name : "Loading..."}</h1>
       <div className="flex flex-row justify-end gap-2">
         <button

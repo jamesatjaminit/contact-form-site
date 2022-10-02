@@ -10,6 +10,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
+import { NextSeo } from "next-seo";
 
 interface Props {
   session: Session;
@@ -70,6 +71,7 @@ const EditUserPage: NextPage<Props> = ({ session, user }) => {
   };
   return (
     <MainContainer>
+      <NextSeo title="Edit User" />
       <h1 className="text-3xl">Edit User: {user.name}</h1>
       <form className="mt-5 max-w-fit" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-2">

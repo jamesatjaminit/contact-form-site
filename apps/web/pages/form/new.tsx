@@ -1,5 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import MainContainer from "../../components/MainContainer";
 import { authOptions } from ".././api/auth/[...nextauth]";
@@ -32,6 +33,7 @@ const NewFormPage: NextPage<Props> = ({ session }) => {
   };
   return (
     <MainContainer>
+      <NextSeo title="New Form" />
       <h1 className="text-3xl">New Form</h1>
       <form className="max-w-fit" onSubmit={submitForm}>
         <div className="form-control">

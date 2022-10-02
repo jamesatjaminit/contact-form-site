@@ -4,6 +4,7 @@ import MainContainer from "../../components/MainContainer";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { NextSeo } from "next-seo";
 
 interface Props {
   session: Session;
@@ -34,6 +35,7 @@ const InviteUserPage: NextPage<Props> = ({ session }) => {
   };
   return (
     <MainContainer>
+      <NextSeo title="Invite User" />
       <h1 className="text-3xl">Invite User</h1>
       <form className="max-w-fit" onSubmit={submitForm}>
         <div className="form-control">

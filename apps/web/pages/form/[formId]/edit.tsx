@@ -9,6 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getForm } from "../../api/form/[id]";
 import { useState } from "react";
+import { NextSeo } from "next-seo";
 interface Props {
   session: Session;
   form: WithStringId<Form>;
@@ -91,6 +92,7 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
   };
   return (
     <MainContainer>
+      <NextSeo title="Edit Form" />
       <h1 className="text-3xl">Edit Form: {form ? form.name : "Loading..."}</h1>
       <form
         className="flex flex-col gap-3 max-w-fit"
