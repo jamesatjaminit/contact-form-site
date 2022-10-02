@@ -9,6 +9,7 @@ import type { User, WithStringId } from "types/dist/database";
 import dayjs from "dayjs";
 import { BsPencilFill } from "react-icons/bs";
 import Link from "next/link";
+import { NextSeo } from "next-seo";
 interface Props {
   session: Session;
 }
@@ -21,6 +22,7 @@ const UserInfoPage: NextPage<Props> = ({ session }) => {
   );
   return (
     <MainContainer>
+      <NextSeo title={user?.name} />
       <h1 className="text-3xl">
         User: {!user && !error && "Loading..."}
         {user && user.email}

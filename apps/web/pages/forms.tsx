@@ -6,6 +6,7 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import useSWR from "swr";
 import { Form, WithStringId } from "types/dist/database";
 import Link from "next/link";
+import { NextSeo } from "next-seo";
 interface Props {
   session: Session;
 }
@@ -17,6 +18,7 @@ const FormsPage: NextPage<Props> = ({ session }) => {
   );
   return (
     <MainContainer>
+      <NextSeo title="Forms" />
       <h1 className="text-3xl">Forms</h1>
       <div className="flex flex-row justify-end">
         <Link href="/form/new">

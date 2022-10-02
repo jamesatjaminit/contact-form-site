@@ -7,6 +7,7 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import useSWR from "swr";
 import type { User, WithStringId } from "types/dist/database";
 import dayjs from "dayjs";
+import { NextSeo } from "next-seo";
 interface Props {
   session: Session;
 }
@@ -18,6 +19,7 @@ const UsersPage: NextPage<Props> = ({ session }) => {
   );
   return (
     <MainContainer>
+      <NextSeo title="Users" />
       <h1 className="text-3xl">Users</h1>
       <div className="flex flex-row justify-end">
         <Link href="/user/invite">
