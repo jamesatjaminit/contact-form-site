@@ -40,6 +40,7 @@ const schema = z.object({
 const EditFormPage: NextPage<Props> = ({ session, form }) => {
   const router = useRouter();
   const [confirmDeleteForm, setConfirmDeleteForm] = useState(false);
+  const sessionIsFormOwner = form.permissions.owners.includes(session.user.id);
   const {
     register,
     handleSubmit,
@@ -105,7 +106,7 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
               type="text"
               className="input input-bordered"
               placeholder="My Special Form"
-              {...register("name")}
+              {...register("name", { disabled: !sessionIsFormOwner })}
             />
           </label>
           {errors.name && (
@@ -119,7 +120,7 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
               type="text"
               className="input input-bordered"
               placeholder="Update Token"
-              {...register("updateToken")}
+              {...register("updateToken", { disabled: !sessionIsFormOwner })}
             />
           </label>
         </div>
@@ -186,7 +187,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
   const form = await getForm(context.params?.formId as string);
-  if (!form || !form.permissions.owners.includes(session.user.id)) {
+  if (
+    !form ||
+    !form.permissions.owners.includes(session.user.id) ||
+    !form.permissions.editors.includes(session.user.id)
+  ) {
     return {
       notFound: true,
     };
