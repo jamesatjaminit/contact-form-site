@@ -60,7 +60,11 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
         >
           Refresh
         </button>
-        {!!(form && form.permissions.owners.includes(session.user.id)) && (
+        {!!(
+          form &&
+          (form.permissions.owners.includes(session.user.id) ||
+            form.permissions.editors.includes(session.user.id))
+        ) && (
           <Link href={`/form/${router.query.formId}/edit`}>
             <a className="btn btn-secondary">
               <BsPencilFill />

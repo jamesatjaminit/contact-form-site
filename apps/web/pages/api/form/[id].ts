@@ -107,8 +107,8 @@ export default async function handler(
         $set: updateBody,
       }
     );
-    if (result.modifiedCount == 1) {
-      res.status(200).json(form);
+    if (result.matchedCount == 1) {
+      res.status(200).json({ status: "Success" });
     } else {
       res.status(500).json({ error: "Internal server error" });
       return;
@@ -214,7 +214,6 @@ export async function getForm(
   if (!form) return null;
   if (userId) {
     if (!form.permissions.owners.includes(userId)) {
-      form.permissions = { owners: [], editors: [], viewers: [] };
       form.notifications = { discord: [], email: [] };
       form.updateToken = "";
     }

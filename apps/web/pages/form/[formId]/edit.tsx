@@ -24,7 +24,7 @@ interface Inputs {
   //   viewers: string[];
   // };
 }
-const schema = z.object({
+const ownerSchema = z.object({
   name: z.string().min(1, { message: "Please enter a form name" }).trim(),
   updateToken: z
     .string()
@@ -36,6 +36,9 @@ const schema = z.object({
   //   viewers: z.array(z.string().min(12, { message: 'Invalid user ID' }).max(12, { message: 'Invalid user ID' })),
   // })
 });
+const editorSchema = z.object({
+  submissionsPaused: z.boolean(),
+});
 
 const EditFormPage: NextPage<Props> = ({ session, form }) => {
   const router = useRouter();
@@ -46,7 +49,9 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
-    resolver: zodResolver(schema),
+    resolver: sessionIsFormOwner
+      ? zodResolver(ownerSchema)
+      : zodResolver(editorSchema),
     defaultValues: {
       name: form.name,
       updateToken: form.updateToken,
@@ -72,7 +77,7 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
     });
     if (response.status == 200) {
       const responseJson = await response.json();
-      router.push("/form/" + responseJson._id);
+      router.push("/form/" + router.query.formId);
     } else {
       alert("Failed to update form!");
     }
@@ -96,7 +101,7 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
       <NextSeo title="Edit Form" />
       <h1 className="text-3xl">Edit Form: {form ? form.name : "Loading..."}</h1>
       <form
-        className="flex flex-col gap-3 max-w-fit"
+        className="flex flex-col gap-3 max-w-fit mt-3"
         onSubmit={handleSubmit(submitHandler)}
       >
         <div className="form-control">
@@ -113,19 +118,27 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
             <p className="text-sm text-red-500">{errors.name?.message}</p>
           )}
         </div>
-        <div className="form-control">
-          <label className="input-group">
-            <span>Update Token</span>
-            <input
-              type="text"
-              className="input input-bordered"
-              placeholder="Update Token"
-              {...register("updateToken", { disabled: !sessionIsFormOwner })}
-            />
-          </label>
-        </div>
-        {errors.updateToken && (
-          <p className="text-sm text-red-500">{errors.updateToken?.message}</p>
+        {sessionIsFormOwner && (
+          <>
+            <div className="form-control">
+              <label className="input-group">
+                <span>Update Token</span>
+                <input
+                  type="text"
+                  className="input input-bordered"
+                  placeholder="Update Token"
+                  {...register("updateToken", {
+                    disabled: !sessionIsFormOwner,
+                  })}
+                />
+              </label>
+            </div>
+            {errors.updateToken && (
+              <p className="text-sm text-red-500">
+                {errors.updateToken?.message}
+              </p>
+            )}
+          </>
         )}
         <div className="form-control">
           <label className="input-group">
@@ -152,14 +165,23 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
           ))}
           <button type="button" onClick={() => appendOwnerField({})} className="btn btn-secondary btn-md w-24">Add Owner</button>
         </div> */}
-        <p>
-          Responses URL: https://{process.env.NEXT_PUBLIC_HOST}/api/form/
-          {form._id}
-        </p>
-        <div className="flex flex-row gap-2">
-          <button className="btn btn-error" type="button" onClick={deleteForm}>
-            {confirmDeleteForm ? "Confirm Delete" : "Delete Form"}
-          </button>
+        {sessionIsFormOwner && (
+          <p>
+            Responses URL: https://{process.env.NEXT_PUBLIC_HOST}/api/form/
+            {form._id}
+          </p>
+        )}
+        <div className="flex flex-row gap-2 justify-center">
+          {sessionIsFormOwner && (
+            <button
+              className="btn btn-error"
+              type="button"
+              onClick={deleteForm}
+            >
+              {confirmDeleteForm ? "Confirm Delete" : "Delete Form"}
+            </button>
+          )}
+
           <button className="btn btn-primary btn-md" type="submit">
             Save
           </button>
@@ -186,11 +208,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const form = await getForm(context.params?.formId as string);
+  const form = await getForm(context.params?.formId as string, session.user.id);
   if (
     !form ||
-    !form.permissions.owners.includes(session.user.id) ||
-    !form.permissions.editors.includes(session.user.id)
+    (!form.permissions.owners.includes(session.user.id) &&
+      !form.permissions.editors.includes(session.user.id))
   ) {
     return {
       notFound: true,
