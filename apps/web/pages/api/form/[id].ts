@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { Form, Response } from "types/dist/database";
@@ -51,6 +51,11 @@ export default async function handler(
       res.status(404).json({ error: "Not found" });
       return;
     } else {
+      if (!form.permissions.owners.includes(session.user.id)) {
+        form.permissions = { owners: [], editors: [], viewers: [] };
+        form.notifications = { discord: [], email: [] };
+        form.updateToken = "";
+      }
       res.status(200).json(form);
     }
   } else if (req.method == "PUT") {
@@ -72,30 +77,38 @@ export default async function handler(
     const form = await collection.findOne({
       $and: [
         { _id: new ObjectId(String(req.query.id)) },
-        { "permissions.owners": session.user.id },
+        {
+          $or: [
+            { "permissions.owners": session.user.id },
+            { "permissions.editors": session.user.id },
+          ],
+        },
       ],
     });
     if (!form) {
-      res.status(404).json({ error: "Not found" });
+      res.status(404).json({ error: "Form not found" });
       return;
+    }
+    let updateBody: Partial<WithId<Form>> = {};
+    if (form.permissions.owners.includes(session.user.id)) {
+      updateBody = {
+        name: body.name,
+        updateToken: body.updateToken,
+        submissionsPaused: body.submissionsPaused,
+      };
+    } else {
+      updateBody = {
+        submissionsPaused: body.submissionsPaused,
+      };
     }
     const result = await collection.updateOne(
       { _id: new ObjectId(String(req.query.id)) },
       {
-        $set: {
-          name: body.name,
-          updateToken: body.updateToken,
-          // permissions: {
-          //   owners: body.permissions.owners
-          //   editors: body.permissions.editors,
-          //   viewers: body.permissions.viewers,
-          // },
-          submissionsPaused: body.submissionsPaused,
-        },
+        $set: updateBody,
       }
     );
-    if (result.modifiedCount == 1) {
-      res.status(200).json(form);
+    if (result.matchedCount == 1) {
+      res.status(200).json({ status: "Success" });
     } else {
       res.status(500).json({ error: "Internal server error" });
       return;
@@ -183,7 +196,10 @@ export default async function handler(
   }
 }
 
-export async function getForm(formid: string): Promise<Form | null> {
+export async function getForm(
+  formid: string,
+  userId?: string
+): Promise<Form | null> {
   const client = await clientPromise;
   const db = client.db();
   try {
@@ -195,5 +211,13 @@ export async function getForm(formid: string): Promise<Form | null> {
   const form = await formCollection.findOne({
     _id: new ObjectId(formid),
   });
+  if (!form) return null;
+  if (userId) {
+    if (!form.permissions.owners.includes(userId)) {
+      form.notifications = { discord: [], email: [] };
+      form.updateToken = "";
+    }
+  }
+
   return JSON.parse(JSON.stringify(form));
 }
