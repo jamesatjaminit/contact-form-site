@@ -186,7 +186,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  const form = await getForm(context.params?.formId as string);
+  const form = await getForm(context.params?.formId as string, session.user.id);
   if (!form) {
     return {
       notFound: true,
