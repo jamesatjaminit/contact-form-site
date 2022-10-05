@@ -26,7 +26,7 @@ const NavBar: NextPage = () => {
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
                   <img
-                    src={session.user.image ?? "/defaultImage.jpg"}
+                    src={session.user.image ?? "/img/defaultImage.jpg"}
                     width={80}
                     height={80}
                     alt="Profile Image"

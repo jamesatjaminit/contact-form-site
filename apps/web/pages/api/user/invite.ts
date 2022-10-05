@@ -32,7 +32,6 @@ export default async function handler(
   const result = await collection.insertOne({
     name: req.body.email,
     email: req.body.email,
-    image: "/defaultImage.jpg",
     admin: req.body.admin,
     emailVerified: new Date(),
   });

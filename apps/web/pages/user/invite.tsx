@@ -2,7 +2,6 @@ import type { GetServerSideProps, NextPage } from "next";
 import { Session, unstable_getServerSession } from "next-auth";
 import MainContainer from "../../components/MainContainer";
 import { authOptions } from "../api/auth/[...nextauth]";
-import { useState } from "react";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
 

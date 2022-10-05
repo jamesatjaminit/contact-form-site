@@ -25,7 +25,7 @@ export interface Response {
 export interface User {
   name: string;
   email: string;
-  image: string;
+  image?: string;
   emailVerified: Date;
   admin: boolean;
 }
