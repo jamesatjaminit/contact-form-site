@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { AUTHENTICATION_METHOD } from "../lib/consts";
 
 const NavBar: NextPage = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
   return (
     <div className="navbar bg-base-300">
       <div className="flex-1">
@@ -58,7 +60,11 @@ const NavBar: NextPage = () => {
         ) : (
           <div>
             <button
-              onClick={() => signIn(AUTHENTICATION_METHOD.toLowerCase())}
+              onClick={() =>
+                signIn(AUTHENTICATION_METHOD.toLowerCase(), {
+                  callbackUrl: router.pathname,
+                })
+              }
               className="btn btn-ghost normal-case"
             >
               Login
