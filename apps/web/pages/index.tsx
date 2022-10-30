@@ -33,9 +33,7 @@ const Home: NextPage<Props> = ({ session, stats }) => {
       <div className="grid grid-flow-col auto-cols-auto">
         <div className="stats shadow mt-5 max-w-fit">
           <div className="stat">
-            <div className="stat-title text-center">
-              Total Responses Handled
-            </div>
+            <div className="stat-title text-center">Total Responses</div>
             <div className="stat-value text-center">
               {stats?.totalResponses}
             </div>
