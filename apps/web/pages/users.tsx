@@ -8,6 +8,7 @@ import useSWR from "swr";
 import type { User, WithStringId } from "types/dist/database";
 import dayjs from "dayjs";
 import { NextSeo } from "next-seo";
+import { AUTHENTICATION_METHOD } from "../lib/consts";
 interface Props {
   session: Session;
 }
@@ -22,7 +23,7 @@ const UsersPage: NextPage<Props> = ({ session }) => {
       <NextSeo title="Users" />
       <h1 className="text-3xl">Users</h1>
       <div className="flex flex-row justify-end">
-        {!process.env.NEXT_PUBLIC_USE_AUTHENTIK && (
+        {AUTHENTICATION_METHOD != "EMAIL" && (
           <Link href="/user/invite">
             <a className="btn btn-primary">Invite</a>
           </Link>

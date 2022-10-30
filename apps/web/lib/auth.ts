@@ -1,7 +1,8 @@
+import { AUTHENTICATION_METHOD } from "./consts";
 import clientPromise from "./mongodb";
 
 export async function canUserSignup(email: string | undefined | null) {
-  if (process.env.NEXT_PUBLIC_USE_AUTHENTIK) {
+  if (AUTHENTICATION_METHOD == "AUTHENTIK") {
     return true;
   }
   if (!email) return false;

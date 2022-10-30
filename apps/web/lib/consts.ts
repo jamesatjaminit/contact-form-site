@@ -1,0 +1,3 @@
+export const AUTHENTICATION_METHOD = process.env.NEXT_PUBLIC_USE_AUTHENTIK
+  ? "AUTHENTIK"
+  : "EMAIL";

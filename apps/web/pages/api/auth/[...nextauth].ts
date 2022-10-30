@@ -5,8 +5,9 @@ import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import AuthentikProvider from "next-auth/providers/authentik";
 import clientPromise from "../../../lib/mongodb";
 import { canUserSignup } from "../../../lib/auth";
+import { AUTHENTICATION_METHOD } from "../../../lib/consts";
 const providers = [];
-if (process.env.NEXT_PUBLIC_USE_AUTHENTIK) {
+if (AUTHENTICATION_METHOD == "AUTHENTIK") {
   providers.push(
     AuthentikProvider({
       name: "SSO",

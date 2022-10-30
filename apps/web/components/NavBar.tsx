@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { AUTHENTICATION_METHOD } from "../lib/consts";
 
 const NavBar: NextPage = () => {
   const { data: session, status } = useSession();
@@ -57,7 +58,7 @@ const NavBar: NextPage = () => {
         ) : (
           <div>
             <button
-              onClick={() => signIn()}
+              onClick={() => signIn(AUTHENTICATION_METHOD.toLowerCase())}
               className="btn btn-ghost normal-case"
             >
               Login

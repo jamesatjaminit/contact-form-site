@@ -4,6 +4,7 @@ import MainContainer from "../../components/MainContainer";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import { NextSeo } from "next-seo";
+import { AUTHENTICATION_METHOD } from "../../lib/consts";
 
 interface Props {
   session: Session;
@@ -32,7 +33,7 @@ const InviteUserPage: NextPage<Props> = ({ session }) => {
       alert("Failed to invite user!");
     }
   };
-  if (process.env.NEXT_PUBLIC_USE_AUTHENTIK) {
+  if (AUTHENTICATION_METHOD == "EMAIL") {
     return (
       <MainContainer>
         <NextSeo title="Invite User" />
