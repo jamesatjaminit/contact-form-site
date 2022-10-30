@@ -32,6 +32,15 @@ const InviteUserPage: NextPage<Props> = ({ session }) => {
       alert("Failed to invite user!");
     }
   };
+  if (process.env.NEXT_PUBLIC_USE_AUTHENTIK) {
+    return (
+      <MainContainer>
+        <NextSeo title="Invite User" />
+        <h1 className="text-3xl">Invite User</h1>
+        <p>Invite user is disabled since SSO via authentik is enabled</p>
+      </MainContainer>
+    );
+  }
   return (
     <MainContainer>
       <NextSeo title="Invite User" />

@@ -1,6 +1,9 @@
 import clientPromise from "./mongodb";
 
 export async function canUserSignup(email: string | undefined | null) {
+  if (process.env.NEXT_PUBLIC_USE_AUTHENTIK) {
+    return true;
+  }
   if (!email) return false;
   const client = await clientPromise;
   const db = client.db();

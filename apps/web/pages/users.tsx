@@ -22,9 +22,11 @@ const UsersPage: NextPage<Props> = ({ session }) => {
       <NextSeo title="Users" />
       <h1 className="text-3xl">Users</h1>
       <div className="flex flex-row justify-end">
-        <Link href="/user/invite">
-          <a className="btn btn-primary">Invite</a>
-        </Link>
+        {!process.env.NEXT_PUBLIC_USE_AUTHENTIK && (
+          <Link href="/user/invite">
+            <a className="btn btn-primary">Invite</a>
+          </Link>
+        )}
       </div>
       {users && (
         <div className="mt-5">
