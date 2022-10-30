@@ -9,6 +9,7 @@ const providers = [];
 if (process.env.NEXT_PUBLIC_USE_AUTHENTIK) {
   providers.push(
     AuthentikProvider({
+      name: "SSO",
       clientId: String(process.env.AUTHENTIK_CLIENT_ID),
       clientSecret: String(process.env.AUTHENTIK_CLIENT_SECRET),
       issuer: String(process.env.AUTHENTIK_ISSUER),
