@@ -16,8 +16,12 @@ if (process.env.NODE_ENV == "development") {
   // @ts-expect-error
   if (!global._mongoClientPromise) {
     client = new MongoClient(uri, options);
-    // @ts-expect-error
-    global._mongoClientPromise = client.connect();
+    try {
+      // @ts-expect-error
+      global._mongoClientPromise = client.connect();
+    } catch (e) {
+      console.log(e);
+    }
   }
   // @ts-expect-error
   clientPromise = global._mongoClientPromise;
