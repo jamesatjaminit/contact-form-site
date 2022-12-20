@@ -18,6 +18,10 @@ export default async function handler(
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
+  if (!req.query.userId || typeof req.query.userId != "string") {
+    res.status(400).json({ error: "Bad request" });
+    return;
+  }
   if (req.query.userId != session.user.id && !session.admin) {
     res.status(403).json({ error: "Forbidden" });
     return;
