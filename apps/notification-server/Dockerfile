@@ -11,4 +11,5 @@ WORKDIR /app
 COPY --from=builder /app/output .
 COPY .env .
 ENV NODE_ENV=production
+EXPOSE 3000
 CMD ["npm", "run", "start"]
