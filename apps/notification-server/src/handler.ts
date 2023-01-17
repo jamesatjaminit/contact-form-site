@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId, WithId } from "mongodb";
 import { Form, Response } from "types/dist/database";
+import { incrementResponsesCounter } from "./prom";
 
 import discordHandler from "./providers/discord";
 import emailHandler from "./providers/email";
@@ -8,9 +9,22 @@ const handler = async (mongoClient: MongoClient) => {
   const responsesCollection = mongoClient
     .db()
     .collection<WithId<Response>>("responses");
-  const stream = responsesCollection.watch();
+  const stream = responsesCollection.watch(
+    [
+      {
+        $match: {
+          operationType: "insert",
+          "fullDocument.notified": false,
+        },
+      },
+    ],
+    {
+      fullDocument: "updateLookup",
+    }
+  );
   stream.on("change", async (change) => {
     if (change.operationType != "insert") return;
+    incrementResponsesCounter(change.fullDocument.form);
     await handleResponse(mongoClient, change.fullDocument);
   });
   const responsesToDo = await responsesCollection

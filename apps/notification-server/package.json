@@ -28,8 +28,10 @@
     "@discordjs/builders": "^1.2.0",
     "axios": "^0.27.2",
     "dotenv": "^16.0.3",
+    "fastify": "^4.11.0",
     "mongodb": "^4.10.0",
     "nodemailer": "^6.8.0",
+    "prom-client": "^14.1.1",
     "types": "workspace:^1.0.0"
   }
 }
