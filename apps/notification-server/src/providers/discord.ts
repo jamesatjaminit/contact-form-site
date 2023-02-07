@@ -31,7 +31,7 @@ const handler = async (
           "Content-Type": "application/json",
         },
         data: JSON.stringify({
-          username: form.name,
+          username: "Form Site",
           embeds: [embed],
         }),
       });
