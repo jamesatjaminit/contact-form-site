@@ -17,16 +17,16 @@ const handler = async (
       to: email,
       from: `noreply <${process.env.EMAIL_FROM}>`,
       subject: `${form.name} - New Response`,
-      text: `Hey,\nThere is a new response on your contact form "${
+      text: `Hey,\nThere is a new response on your form "${
         form.name
       }". Click here to view it: ${String(
         process.env.CONTACT_SITE_URL
-      )}/form/${form._id.toString()}.\nKind Regards,\nContact Form Site`,
-      html: `<p>Hey,</p><p>There is a new response on your contact form "${
+      )}/form/${form._id.toString()}.\nKind Regards,\nForm Site`,
+      html: `<p>Hey,</p><p>There is a new response on your form "${
         form.name
       }". Click <a href="${String(
         process.env.CONTACT_SITE_URL
-      )}/form/${form._id.toString()}">here</a> to view it.</p><p>Kind Regards,</p><p>Contact Form Site</p>`,
+      )}/form/${form._id.toString()}">here</a> to view it.</p><p>Kind Regards,</p><p>Form Site</p>`,
     };
     try {
       await mailer.sendMail(message);

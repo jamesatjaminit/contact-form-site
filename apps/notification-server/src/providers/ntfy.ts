@@ -13,7 +13,7 @@ const handler = async (
     try {
       publish({
         topic: topic.topic,
-        message: 'New response on your form "' + form.name + '"',
+        message: 'There is a new response on your form "' + form.name + '"',
         priority: MessagePriority.DEFAULT,
         authorization: topic.auth,
         server: topic.serverUrl,

@@ -14,7 +14,7 @@ const handler = async (
     const embed = new EmbedBuilder()
       .setTitle("New Response")
       .setDescription(
-        `There is a new response on your contact form "**${
+        `There is a new response on your form "**${
           form.name
         }**". Click [here](${
           String(process.env.CONTACT_SITE_URL) + "/form/" + form._id.toString()
