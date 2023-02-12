@@ -20,11 +20,15 @@ const FormsPage: NextPage<Props> = ({ session }) => {
     <MainContainer>
       <NextSeo title="Forms" />
       <h1 className="text-3xl">Forms</h1>
-      <div className="flex flex-row justify-end">
-        <Link href="/form/new" className="btn btn-primary">
-          New Form
-        </Link>
-      </div>
+      {(process.env.NEXT_PUBLIC_ADMIN_ONLY_CREATE_FORMS != "true" ||
+        session.user.admin) && (
+        <div className="flex flex-row justify-end">
+          <Link href="/form/new" className="btn btn-primary">
+            New Form
+          </Link>
+        </div>
+      )}
+
       {(!!data && data.length) > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
           {data &&

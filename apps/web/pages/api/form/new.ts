@@ -19,6 +19,13 @@ export default async function handler(
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
+  if (
+    process.env.NEXT_PUBLIC_ADMIN_ONLY_CREATE_FORMS == "true" &&
+    !session.user.admin
+  ) {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
   if (req.headers["content-type"] != "application/json") {
     res.status(400).json({ error: "Bad request" });
     return;
