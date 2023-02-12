@@ -4,6 +4,7 @@ import { incrementResponsesCounter } from "./prom";
 
 import discordHandler from "./providers/discord";
 import emailHandler from "./providers/email";
+import ntfyHandler from "./providers/ntfy";
 
 const handler = async (mongoClient: MongoClient) => {
   const responsesCollection = mongoClient
@@ -53,6 +54,7 @@ async function handleResponse(
     return;
   }
   try {
+    await ntfyHandler(mongoClient, response, form);
     await discordHandler(mongoClient, response, form);
     await emailHandler(mongoClient, response, form);
     const responsesCollection = mongoClient

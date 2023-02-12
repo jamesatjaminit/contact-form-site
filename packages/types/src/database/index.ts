@@ -12,6 +12,14 @@ export interface Form {
   notifications: {
     email: string[];
     discord: string[];
+    ntfy: {
+      auth?: {
+        username: string;
+        password: string;
+      };
+      serverUrl: string;
+      topic: string;
+    }[];
   };
 }
 

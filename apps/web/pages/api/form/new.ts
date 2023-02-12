@@ -45,6 +45,7 @@ export default async function handler(
     notifications: {
       email: [],
       discord: [],
+      ntfy: [],
     },
   });
   if (result.insertedId) {
