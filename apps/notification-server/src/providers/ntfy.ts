@@ -13,13 +13,14 @@ const handler = async (
     try {
       publish({
         topic: topic.topic,
+        title: "New Response",
         message: 'There is a new response on your form "' + form.name + '"',
         priority: MessagePriority.DEFAULT,
         authorization: topic.auth,
         server: topic.serverUrl,
         clickURL:
           String(process.env.CONTACT_SITE_URL) + "/form/" + form._id.toString(),
-        tags: [form._id.toString()],
+        tags: ["new", form._id.toString()],
         actions: [
           {
             clear: true,
