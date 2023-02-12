@@ -28,7 +28,7 @@ const handler = async (
               String(process.env.CONTACT_SITE_URL) +
               "/form/" +
               form._id.toString(),
-            type: "http",
+            type: "view",
           },
         ],
       });
