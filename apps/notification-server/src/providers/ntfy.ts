@@ -1,6 +1,6 @@
 import { MongoClient, WithId } from "mongodb";
 import type { Form, Response } from "types/dist/database";
-import ntfy from "ntfy";
+import { publish, MessagePriority } from "ntfy";
 
 const handler = async (
   mongoClient: MongoClient,
@@ -11,10 +11,10 @@ const handler = async (
   if (!ntfyTopics) return;
   for (const topic of ntfyTopics) {
     try {
-      ntfy.publish({
+      publish({
         topic: topic.topic,
         message: 'New response on your form "' + form.name + '"',
-        priority: ntfy.MessagePriority.DEFAULT,
+        priority: MessagePriority.DEFAULT,
         authorization: topic.auth,
         server: topic.serverUrl,
         clickURL:
