@@ -1,20 +1,21 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import MainContainer from "../../components/MainContainer";
 import { authOptions } from "../api/auth/[...nextauth]";
 import useSWR from "swr";
 import { Form, Response, WithStringId } from "types/dist/database";
 import { useRouter } from "next/router";
 import { fetcher } from "../../lib/utils";
-import { BsPencilFill } from "react-icons/bs";
+import { BsEnvelopeFill, BsPencilFill } from "react-icons/bs";
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getForm } from "../api/form/[id]";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { NextSeo } from "next-seo";
 dayjs.extend(relativeTime);
+import { NextSeo } from "next-seo";
+import z from "zod";
 
 interface Props {
   session: Session;
@@ -141,7 +142,17 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
                       {Object.entries(response.data).map(([key, value]) => (
                         <div key={key}>
                           <span className="font-bold">{key}: </span>
-                          <span>{String(value)}</span>
+                          <span>
+                            {String(value)}{" "}
+                            {z.string().email().safeParse(value).success && (
+                              <a
+                                href={`mailto:${value}`}
+                                className="text-accent"
+                              >
+                                <BsEnvelopeFill />
+                              </a>
+                            )}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -171,11 +182,7 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
 
 export default FormResponsesPage;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) {
     return {
       redirect: {
