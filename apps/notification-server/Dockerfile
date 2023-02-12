@@ -2,7 +2,7 @@ FROM node:18 as builder
 WORKDIR /app
 COPY . .
 RUN npm install -g pnpm
-RUN pnpm install
+RUN pnpm install --filter=notification-server types
 RUN pnpm turbo run build --filter=notification-server
 RUN pnpm --filter=notification-server --prod deploy output
 
