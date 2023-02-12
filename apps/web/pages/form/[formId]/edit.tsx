@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import type { WithStringId, Form } from "types/dist/database";
 import MainContainer from "../../../components/MainContainer";
 import { authOptions } from "../../api/auth/[...nextauth]";
@@ -193,11 +193,7 @@ const EditFormPage: NextPage<Props> = ({ session, form }) => {
 
 export default EditFormPage;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) {
     return {
       redirect: {

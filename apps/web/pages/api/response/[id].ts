@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import clientPromise from "../../../lib/mongodb";
 import { authOptions } from "../auth/[...nextauth]";
 import { Form, Response } from "types/dist/database";
@@ -13,7 +13,7 @@ export default async function handler(
     res.status(405).json({ error: "Method not allowed" });
     return;
   }
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions);
   if (!session) {
     res.status(401).json({ error: "Unauthorized" });
     return;

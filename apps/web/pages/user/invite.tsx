@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import MainContainer from "../../components/MainContainer";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { useRouter } from "next/router";
@@ -38,7 +38,7 @@ const InviteUserPage: NextPage<Props> = ({ session }) => {
       <MainContainer>
         <NextSeo title="Invite User" />
         <h1 className="text-3xl">Invite User</h1>
-        <p>Invite user is disabled since SSO via authentik is enabled</p>
+        <p>Invite user is disabled since SSO is enabled</p>
       </MainContainer>
     );
   }
@@ -55,7 +55,7 @@ const InviteUserPage: NextPage<Props> = ({ session }) => {
             <span>Email</span>
             <input
               type="text"
-              placeholder="james@jaminit.co.uk"
+              placeholder="john@example.com"
               className="input input-bordered"
               name="email"
               required
@@ -87,11 +87,7 @@ const InviteUserPage: NextPage<Props> = ({ session }) => {
 
 export default InviteUserPage;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session?.user.admin) {
     return {
       notFound: true,

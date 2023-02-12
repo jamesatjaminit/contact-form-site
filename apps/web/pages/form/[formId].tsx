@@ -66,10 +66,11 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
           (form.permissions.owners.includes(session.user.id) ||
             form.permissions.editors.includes(session.user.id))
         ) && (
-          <Link href={`/form/${router.query.formId}/edit`}>
-            <a className="btn btn-secondary">
-              <BsPencilFill />
-            </a>
+          <Link
+            href={`/form/${router.query.formId}/edit`}
+            className="btn btn-secondary"
+          >
+            <BsPencilFill />
           </Link>
         )}
       </div>
@@ -130,7 +131,7 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
                       <div
                         className="tooltip"
                         data-tip={dayjs(response.createdAt).format(
-                          "DD/MM/YY HH:mm:ss"
+                          "DD/MM/YYYY HH:mm:ss"
                         )}
                       >
                         <span className="badge badge-accent font-bold">
@@ -143,13 +144,13 @@ const FormResponsesPage: NextPage<Props> = ({ session, form }) => {
                         <div key={key}>
                           <span className="font-bold">{key}: </span>
                           <span>
-                            {String(value)}{" "}
+                            {String(value)} {"    "}
                             {z.string().email().safeParse(value).success && (
                               <a
                                 href={`mailto:${value}`}
-                                className="text-accent"
+                                className="text-accent hover:text-accent-focus"
                               >
-                                <BsEnvelopeFill />
+                                Email
                               </a>
                             )}
                           </span>

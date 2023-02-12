@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import useSWR from "swr";
@@ -21,7 +21,7 @@ const Home: NextPage<Props> = ({ session, stats }) => {
   if (!session) {
     return (
       <MainContainer>
-        <h1 className="text-3xl">Contact Form Site</h1>
+        <h1 className="text-3xl">Form Site</h1>
         <p className="mt-5">Please login to view this site.</p>
       </MainContainer>
     );
@@ -29,7 +29,7 @@ const Home: NextPage<Props> = ({ session, stats }) => {
   return (
     <MainContainer>
       <NextSeo title="Home" />
-      <h1 className="text-3xl">Contact Form Site</h1>
+      <h1 className="text-3xl">Form Site</h1>
       <div className="grid grid-flow-col auto-cols-auto">
         <div className="stats shadow mt-5 max-w-fit">
           <div className="stat">
@@ -53,10 +53,11 @@ const Home: NextPage<Props> = ({ session, stats }) => {
             {forms &&
               forms.map((form) => (
                 <li key={form._id}>
-                  <Link href={"/form/" + form._id}>
-                    <a className="text-accent hover:text-accent-focus">
-                      {form.name}
-                    </a>
+                  <Link
+                    href={"/form/" + form._id}
+                    className="text-accent hover:text-accent-focus"
+                  >
+                    {form.name}
                   </Link>
                 </li>
               ))}
@@ -70,11 +71,7 @@ const Home: NextPage<Props> = ({ session, stats }) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) {
     return {
       props: {

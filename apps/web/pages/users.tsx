@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import Link from "next/link";
 import MainContainer from "../components/MainContainer";
 import { fetcher } from "../lib/utils";
@@ -23,9 +23,9 @@ const UsersPage: NextPage<Props> = ({ session }) => {
       <NextSeo title="Users" />
       <h1 className="text-3xl">Users</h1>
       <div className="flex flex-row justify-end">
-        {AUTHENTICATION_METHOD != "EMAIL" && (
-          <Link href="/user/invite">
-            <a className="btn btn-primary">Invite</a>
+        {AUTHENTICATION_METHOD == "EMAIL" && (
+          <Link href="/user/invite" className="btn btn-primary">
+            Invite
           </Link>
         )}
       </div>
@@ -34,19 +34,17 @@ const UsersPage: NextPage<Props> = ({ session }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {users.map((user) => (
               <Link href={"/user/" + user._id} key={user._id}>
-                <a>
-                  <div className="card bg-base-200 shadow-xl max-w-sm">
-                    <div className="card-body">
-                      <h2 className="card-title">{user.email}</h2>
-                      <p>Email: {user.email}</p>
-                      <p>
-                        Account Created:{" "}
-                        {dayjs(user.emailVerified).format("DD/MM/YYYY hh:mm")}
-                      </p>
-                      <p>Administrator: {user.admin ? "Yes" : "No"}</p>
-                    </div>
+                <div className="card bg-base-200 shadow-xl max-w-sm">
+                  <div className="card-body">
+                    <h2 className="card-title">{user.email}</h2>
+                    <p>Email: {user.email}</p>
+                    <p>
+                      Account Created:{" "}
+                      {dayjs(user.emailVerified).format("DD/MM/YYYY hh:mm")}
+                    </p>
+                    <p>Administrator: {user.admin ? "Yes" : "No"}</p>
                   </div>
-                </a>
+                </div>
               </Link>
             ))}
           </div>
@@ -58,11 +56,7 @@ const UsersPage: NextPage<Props> = ({ session }) => {
 
 export default UsersPage;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session?.user.admin) {
     return {
       notFound: true,

@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import MainContainer from "../../components/MainContainer";
 import { authOptions } from "../api/auth/[...nextauth]";
 import useSWR from "swr";
@@ -28,10 +28,11 @@ const UserInfoPage: NextPage<Props> = ({ session }) => {
         {user && user.email}
       </h1>
       <div className="flex flex-row justify-end">
-        <Link href={`/user/${router.query.userId}/edit`}>
-          <a className="btn btn-primary">
-            <BsPencilFill />
-          </a>
+        <Link
+          href={`/user/${router.query.userId}/edit`}
+          className="btn btn-primary"
+        >
+          <BsPencilFill />
         </Link>
       </div>
       {user && (
@@ -71,11 +72,7 @@ const UserInfoPage: NextPage<Props> = ({ session }) => {
 
 export default UserInfoPage;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) {
     return {
       redirect: {

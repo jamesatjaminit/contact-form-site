@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { Session, unstable_getServerSession } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import MainContainer from "../components/MainContainer";
 import { fetcher } from "../lib/utils";
 import { authOptions } from "./api/auth/[...nextauth]";
@@ -21,8 +21,8 @@ const FormsPage: NextPage<Props> = ({ session }) => {
       <NextSeo title="Forms" />
       <h1 className="text-3xl">Forms</h1>
       <div className="flex flex-row justify-end">
-        <Link href="/form/new">
-          <a className="btn btn-primary">New Form</a>
+        <Link href="/form/new" className="btn btn-primary">
+          New Form
         </Link>
       </div>
       {(!!data && data.length) > 0 && (
@@ -30,13 +30,11 @@ const FormsPage: NextPage<Props> = ({ session }) => {
           {data &&
             data.map((form) => (
               <Link href={"/form/" + form._id} key={form._id}>
-                <a>
-                  <div className="card bg-base-200 shadow-xl max-w-sm">
-                    <div className="card-body">
-                      <h2 className="card-title">{form.name}</h2>
-                    </div>
+                <div className="card bg-base-200 shadow-xl max-w-sm">
+                  <div className="card-body">
+                    <h2 className="card-title">{form.name}</h2>
                   </div>
-                </a>
+                </div>
               </Link>
             ))}
         </div>
@@ -88,11 +86,7 @@ const FormsPage: NextPage<Props> = ({ session }) => {
 
 export default FormsPage;
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) {
     return {
       redirect: {

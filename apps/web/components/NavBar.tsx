@@ -10,19 +10,19 @@ const NavBar: NextPage = () => {
   return (
     <div className="navbar bg-base-300">
       <div className="flex-1">
-        <Link href="/">
-          <a className="btn btn-ghost normal-case text-xl">Contact Admin</a>
+        <Link href="/" className="btn btn-ghost normal-case text-xl">
+          Contact Admin
         </Link>
       </div>
       <div className="flex-none">
         {status == "authenticated" ? (
           <div className="flex flex-row gap-3">
-            <Link href="/forms">
-              <a className="btn btn-ghost normal-case">Forms</a>
+            <Link href="/forms" className="btn btn-ghost normal-case">
+              Forms
             </Link>
             {session.user.admin && (
-              <Link href="/users">
-                <a className="btn btn-ghost normal-case">Users</a>
+              <Link href="/users" className="btn btn-ghost normal-case">
+                Users
               </Link>
             )}
             <div className="dropdown dropdown-end">
@@ -42,13 +42,11 @@ const NavBar: NextPage = () => {
                 className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
               >
                 <li>
-                  <Link href={"/user/" + session.user.id}>
-                    <a>Profile</a>
-                  </Link>
+                  <Link href={"/user/" + session.user.id}>Profile</Link>
                 </li>
                 <li>
                   <Link href={"/user/" + session.user.id + "/edit"}>
-                    <a>Settings</a>
+                    Settings
                   </Link>
                 </li>
                 <li>
