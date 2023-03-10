@@ -17,6 +17,7 @@ const handler = async (
         },
         body: JSON.stringify({
           text: "@channel",
+          username: "Form Site",
           attachments: [
             {
               title: "New Response",
