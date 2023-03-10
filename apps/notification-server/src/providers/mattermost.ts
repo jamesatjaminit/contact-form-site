@@ -16,18 +16,26 @@ const handler = async (
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text: 'There is a new response on your form "' + form.name + '"',
-          props: {
-            attachments: [
-              {
-                title: "View",
-                title_link:
-                  String(process.env.CONTACT_SITE_URL) +
-                  "/form/" +
-                  form._id.toString(),
-              },
-            ],
-          },
+          text: "@channel",
+          attachments: [
+            {
+              title: "New Response",
+              title_link:
+                String(process.env.CONTACT_SITE_URL) +
+                "/form/" +
+                form._id.toString(),
+              text: 'There is a new response on your form "' + form.name + '"',
+              fields: [
+                {
+                  title: "Link",
+                  value:
+                    String(process.env.CONTACT_SITE_URL) +
+                    "/form/" +
+                    form._id.toString(),
+                },
+              ],
+            },
+          ],
         }),
       });
     } catch (err) {
