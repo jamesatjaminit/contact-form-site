@@ -5,6 +5,7 @@ import { incrementResponsesCounter } from "./prom";
 import discordHandler from "./providers/discord";
 import emailHandler from "./providers/email";
 import ntfyHandler from "./providers/ntfy";
+import mattermostHandler from "./providers/mattermost";
 
 const handler = async (mongoClient: MongoClient) => {
   const responsesCollection = mongoClient
@@ -57,6 +58,7 @@ async function handleResponse(
     await ntfyHandler(mongoClient, response, form);
     await discordHandler(mongoClient, response, form);
     await emailHandler(mongoClient, response, form);
+    await mattermostHandler(mongoClient, response, form);
     const responsesCollection = mongoClient
       .db()
       .collection<Response>("responses");

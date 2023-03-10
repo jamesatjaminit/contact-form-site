@@ -1,5 +1,5 @@
 import { MongoClient, WithId } from "mongodb";
-import { Form } from "types/dist/database";
+import { Form, Response } from "types/dist/database";
 
 const handler = async (
   mongoClient: MongoClient,
