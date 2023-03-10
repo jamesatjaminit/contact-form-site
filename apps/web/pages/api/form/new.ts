@@ -53,6 +53,7 @@ export default async function handler(
       email: [],
       discord: [],
       ntfy: [],
+      mattermost: [],
     },
   });
   if (result.insertedId) {

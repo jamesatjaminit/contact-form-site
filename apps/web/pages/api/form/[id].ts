@@ -53,7 +53,12 @@ export default async function handler(
     } else {
       if (!form.permissions.owners.includes(session.user.id)) {
         form.permissions = { owners: [], editors: [], viewers: [] };
-        form.notifications = { discord: [], email: [], ntfy: [] };
+        form.notifications = {
+          discord: [],
+          email: [],
+          ntfy: [],
+          mattermost: [],
+        };
         form.updateToken = "";
       }
       res.status(200).json(form);
@@ -214,7 +219,7 @@ export async function getForm(
   if (!form) return null;
   if (userId) {
     if (!form.permissions.owners.includes(userId)) {
-      form.notifications = { discord: [], email: [], ntfy: [] };
+      form.notifications = { discord: [], email: [], ntfy: [], mattermost: [] };
       form.updateToken = "";
     }
   }

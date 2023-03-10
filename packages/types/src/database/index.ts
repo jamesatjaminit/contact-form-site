@@ -12,6 +12,7 @@ export interface Form {
   notifications: {
     email: string[];
     discord: string[];
+    mattermost: string[];
     ntfy: {
       auth?: {
         username: string;
