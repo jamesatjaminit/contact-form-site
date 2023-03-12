@@ -1,8 +1,9 @@
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
 import { DefaultSeo } from "next-seo";
+import { trpc } from "../lib/trpc";
 
-export default function App({ Component, pageProps }: any) {
+function App({ Component, pageProps }: any) {
   return (
     <SessionProvider session={pageProps.session}>
       <DefaultSeo
@@ -13,3 +14,5 @@ export default function App({ Component, pageProps }: any) {
     </SessionProvider>
   );
 }
+
+export default trpc.withTRPC(App);

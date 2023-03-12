@@ -33,7 +33,7 @@ const InviteUserPage: NextPage<Props> = ({ session }) => {
       alert("Failed to invite user!");
     }
   };
-  if (AUTHENTICATION_METHOD == "EMAIL") {
+  if (AUTHENTICATION_METHOD == "AUTHENTIK") {
     return (
       <MainContainer>
         <NextSeo title="Invite User" />

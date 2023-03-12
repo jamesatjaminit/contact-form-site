@@ -22,5 +22,8 @@
   "types": "dist/main.d.ts",
   "files": [
     "dist/"
-  ]
+  ],
+  "dependencies": {
+    "zod": "^3.20.6"
+  }
 }
